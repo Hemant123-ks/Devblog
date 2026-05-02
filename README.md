@@ -1,4 +1,8 @@
 # DevBlog - Backend REST API
+Live URL: https://devblog-dc16.onrender.com
+GitHub: https://github.com/Hemant123-ks/Devblog
+
+
 A full-featured blog backend built with Node.js, Express.js, and MongoDB.
 
 ## Features
