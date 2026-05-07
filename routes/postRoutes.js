@@ -18,8 +18,19 @@ router.post("/", protect, async(req, res) => {
 })
 router.get("/", async(req, res) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 });
-        res.status(200).json(posts);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const poat = await Post.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+
+        const total = await Post.countDocuments();
+        res.status(200).json({
+            posts: poat,
+            currentpage: page,
+            totalpages: Math.ceil(total / limit),
+            totalPosts: total
+        })
     } catch (err) {
         res.status(500).json({ message: "error found", error: err.message });
     }
@@ -31,6 +42,9 @@ router.get("/:_id", async(req, res) => {
             return res.status(404).json({ message: "not found" });
         }
         res.status(200).json(poat);
+
+
+
     } catch (err) {
         res.status(500).json({ message: "error found", error: err.message });
     }
