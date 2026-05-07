@@ -21,10 +21,13 @@ router.get("/", async(req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
+        const search = req.query.search || "";
 
-        const poat = await Post.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const poat = await Post.find({
+            title: { $regex: search, $options: "i" }
+        }).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
-        const total = await Post.countDocuments();
+        const total = await Post.countDocuments({ title: { $regex: search, $options: "i" } });
         res.status(200).json({
             posts: poat,
             currentpage: page,
