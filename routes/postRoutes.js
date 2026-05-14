@@ -16,6 +16,18 @@ router.post("/", protect, async(req, res) => {
         res.status(500).json({ message: "server error", error: err.message });
     }
 })
+router.get("/userposts/:userid", async(req, res) => {
+    try {
+        const getuser = await Post.find({ author: req.params.userid });
+        if (getuser.length === 0) {
+            return res.status(404).json({ message: "not found" });
+        }
+        res.status(200).json({ message: "these aree all the post", getuser })
+    } catch (err) {
+        res.status(500).json({ message: "error", error: err.message });
+    }
+
+})
 router.get("/", async(req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -90,5 +102,6 @@ router.delete("/:_id", protect, async(req, res) => {
         res.status(500).json({ message: "error found", error: err.message });
     }
 })
+
 
 module.exports = router;
